@@ -10,9 +10,7 @@
 | 系统概念   |      名称      |  具体描述 |
 | ---- | ---- | ------ | 
 | channel | 限流通道| 一个业务系统分为多个channel，一个channel可以多个strategy.<br/>业务系统对某个具体的资源进行限流，会根据当前资源找到对应的chennel，然后执行channel下的限流策略strategy，如果有一个strategy限制了请求，则整个channel限制请求 |
-| resource | 资源 | `channel下面的一个属性，用于channel的区分。两种类型
-1、url-pattern类型：必须以/开头，主要应用于url匹配，如对http请求，比如/** 表示所有的URL， 可以支持：？匹配一个字、*匹配0个或多个字符、* *匹配0个或多个目录，于springMVC的url匹配模式一致，主要用于url限流方式 
-2、key类型:不以/开头，只匹配一个，主要应用于具体的某个resource，常用于注解方式` |
+| resource | 资源 | channel下面的一个属性，用于channel的区分。两种类型<br/> 1、url-pattern类型：必须以/开头，主要应用于url匹配，如对http请求，比如/** 表示所有的URL， 可以支持：？匹配一个字、*匹配0个或多个字符、* *匹配0个或多个目录，于springMVC的url匹配模式一致，主要用于url限流方式 <br/>2、key类型:不以/开头，只匹配一个，主要应用于具体的某个resource，常用于注解方式` |
 |strategy|限流策略|具体的限流方式，如限额、限频、黑白名单等等。。。|
 ##系统设计
 ![系统设计](docs/tap-xmind.png)
@@ -132,13 +130,9 @@ Tap tap = new Tap.Builder()
 ## 单机-限频
 
 * 描述：单机限制每次请求间隔不小于某个值
-
 * 适用场景：下单、秒杀抢购等场景
-
 * 提示: 由于使用本地LRU缓存，如果在配置时间间隔内 比如说24*3600*1000（一天），导致系统缓存存储超过10万个 key的请求，系统为了防止OOM，会删除最早的key，这样会影响这部分key的限流
-
 * strategyClassName:"com.github.wwjwell.tap.strategy.local.FrequencyStrategy"
-
 * 配置描述
 
   | 字段                 | 含义                         | 是否必须 | 默认值 | 描述                                                         |
@@ -175,6 +169,7 @@ Tap tap = new Tap.Builder()
 * 提示：强烈建议使用这种方式，系统吞吐量会根据集群数量而增加
 * strategyClassName:"com.github.wwjwell.tap.strategy.local.ThresholdStrategy" 
 * 配置描述
+
 | 字段 | 含义 | 是否必须 | 默认值 | 描述 |
 | ------------------- | -------------- | -------- | ------ | ---------------------- |
 | timeoutMilliseconds | 超时时间       | 否       | 200    | 超时时间，最长等待时间 |
@@ -208,6 +203,7 @@ Tap tap = new Tap.Builder()
 * 适用场景：AB发布。
 * strategyClassName:"com.github.wwjwell.tap.strategy.local.KeyPercentStrategy" 
 * 配置描述
+
 | 字段                | 含义           | 是否必须 | 默认值 | 描述                   |
 | ------------------- | -------------- | -------- | ------ | ---------------------- |
 | key | attachment的key      | 是      | 无    | key.value.做hash运算 |
@@ -240,6 +236,7 @@ Tap tap = new Tap.Builder()
 * 适用场景：封禁。
 * strategyClassName:"com.github.wwjwell.tap.strategy.local.BlackListStrategy" 
 * 配置描述
+
 | 字段                | 含义           | 是否必须 | 默认值 | 描述                   |
 | ------------------- | -------------- | -------- | ------ | ---------------------- |
 | key | attachment的key      | 是      | 无    | key.value.做hash运算 |
@@ -274,6 +271,7 @@ Tap tap = new Tap.Builder()
 * 适用场景：封禁。
 * strategyClassName:"com.github.wwjwell.tap.strategy.local.BlackListStrategy" 
 * 配置描述
+
 | 字段                | 含义           | 是否必须 | 默认值 | 描述                   |
 | ------------------- | -------------- | -------- | ------ | ---------------------- |
 | key | attachment的key      | 是      | 无    | key.value.做hash运算 |
