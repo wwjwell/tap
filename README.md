@@ -105,8 +105,8 @@
   ]
 }
 ```
-
-## Spring配置
+## 如何初始化Tap
+### Spring配置初始化
 
 ```xml
 <!-- 系统以及初始化redisStoreClient，可以直接注入 -->
@@ -116,7 +116,7 @@
  
 ```
 
-## 普通方式使用
+### 普通方式初始化
 
 ```java
 /** 使用系统的redisStoreClient */
@@ -124,6 +124,86 @@ Tap tap = new Tap.Builder()
     .configLocation("/config_Frequency.json")
     .build();
 
+```
+## 如何使用
+### 普通方式使用
+```java
+HashMap<String, Object> attachment = new HashMap();
+attachment.put(key,value);
+//acquire 来对 resource="/hello" 做限流控制
+RateLimitResult result = tap.rateLimiter().acquire("/hello", attachment);
+if(result.isReject()){
+	System.err.println("reject");
+}else{
+	System.out.println("pass"):
+}
+```
+### spring使用方式
+```java
+@Autowired
+private RateLimiter ratelimter;
+ 
+/**
+ * spring中使用ratelimiter.acquire进行限流控制
+ */
+public boolean doAcquire(String resource,Map<String,Object> attachment){
+	return ratelimiter.acquire(resource,attachment).isAccess();
+}
+```
+
+
+### WEB系统在filter中使用限流
+```java
+public class RateLimiterFilter implements Filter {
+    private Logger logger = LoggerFactory.getLogger(RateLimiterFilter.class);
+    private RateLimiter rateLimiter;
+    @Override
+    public void init(FilterConfig filterConfig) throws ServletException {
+        ServletContext servletContext = filterConfig.getServletContext();
+        ApplicationContext context = WebApplicationContextUtils.getWebApplicationContext(servletContext);
+        assert context!=null;
+        rateLimiter = context.getBean(RateLimiter.class);
+    }
+
+    @Override
+    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
+        HttpServletRequest request = (HttpServletRequest) servletRequest;
+
+        //用法
+        HashMap<String, Object> map = Maps.newHashMap();
+        String uid = request.getParameter("uid");
+        map.put("uid", uid);
+        map.put("uuid", UUID.randomUUID().toString());
+        RateLimitResult rateLimitResult = rateLimiter.acquire(request.getRequestURI(), map);
+        if (rateLimitResult.isReject()) {
+            logger.warn("reject, reason={}", rateLimitResult);
+            return;
+        } else {
+            logger.info("access");
+        }
+
+        filterChain.doFilter(servletRequest,servletResponse);
+    }
+    @Override
+    public void destroy() {
+
+    }
+}
+```
+
+### 注解方式使用
+注解方式必须使用spring方式初始化
+```java
+@RateLimiter(resource = "sayHelloResource",rejectType = RateLimiter.RejectType.FallBack, fallBackMethod = "sayHelloCallBack")
+public String sayHello(@Attachment(key = "uid")String uid){
+    System.out.println("sayHello" + uid);
+    return "ok Hello";
+}
+
+public String sayHelloCallBack(String uid) {
+    System.out.println("sayHelloCallBack" + uid);
+    return "callback hello";
+}
 ```
 
 # 限流策略
