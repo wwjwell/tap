@@ -6,9 +6,9 @@
  * > 集群需要使用Redis，暂无实现（支持集群限流：限频、限QPS、限额）
 
 # 整体设计
-##基本概念
+## 基本概念
 | 系统概念   |      名称      |  具体描述 |
-| :--------: |:-------------- |:------ |
+| ---- | ---- | ------ | 
 | channel | 限流通道| 一个业务系统分为多个channel，一个channel可以多个strategy.<br/>业务系统对某个具体的资源进行限流，会根据当前资源找到对应的chennel，然后执行channel下的限流策略strategy，如果有一个strategy限制了请求，则整个channel限制请求 |
 | resource | 资源 | `channel下面的一个属性，用于channel的区分。两种类型
 1、url-pattern类型：必须以/开头，主要应用于url匹配，如对http请求，比如/** 表示所有的URL， 可以支持：？匹配一个字、*匹配0个或多个字符、* *匹配0个或多个目录，于springMVC的url匹配模式一致，主要用于url限流方式 
@@ -57,7 +57,7 @@
 
 # 接入指南
 
-1、根据自己业务特点生成配置文件
+## 主配置文件描述
 
 | 字段 | 父级 | 类型   | 值   | 描述                             |
 | ---- | ---- | ------ | ---- | -------------------------------- |
@@ -107,7 +107,7 @@
 }
 ```
 
-2、Spring配置
+## Spring配置
 
 ```xml
 <!-- 系统以及初始化redisStoreClient，可以直接注入 -->
@@ -117,7 +117,7 @@
  
 ```
 
-3、普通方式使用
+## 普通方式使用
 
 ```java
 /** 使用系统的redisStoreClient */
@@ -139,7 +139,7 @@ Tap tap = new Tap.Builder()
 
 * strategyClassName:"com.github.wwjwell.tap.strategy.local.FrequencyStrategy"
 
-* 配置描述：
+* 配置描述
 
   | 字段                 | 含义                         | 是否必须 | 默认值 | 描述                                                         |
   | -------------------- | ---------------------------- | -------- | ------ | ------------------------------------------------------------ |
@@ -174,8 +174,8 @@ Tap tap = new Tap.Builder()
 * 适用场景：允许一定量的流量突发的QPS限流
 * 提示：强烈建议使用这种方式，系统吞吐量会根据集群数量而增加
 * strategyClassName:"com.github.wwjwell.tap.strategy.local.ThresholdStrategy" 
-* 配置描述:
-| 字段                | 含义           | 是否必须 | 默认值 | 描述                   |
+* 配置描述
+| 字段 | 含义 | 是否必须 | 默认值 | 描述 |
 | ------------------- | -------------- | -------- | ------ | ---------------------- |
 | timeoutMilliseconds | 超时时间       | 否       | 200    | 超时时间，最长等待时间 |
 | qps                 | qps            | 是       | 无     | 每秒最大请求数         |
@@ -239,7 +239,7 @@ Tap tap = new Tap.Builder()
 * 描述 ：黑名单，在黑名单的请求，直接拒绝
 * 适用场景：封禁。
 * strategyClassName:"com.github.wwjwell.tap.strategy.local.BlackListStrategy" 
-* 配置描述：
+* 配置描述
 | 字段                | 含义           | 是否必须 | 默认值 | 描述                   |
 | ------------------- | -------------- | -------- | ------ | ---------------------- |
 | key | attachment的key      | 是      | 无    | key.value.做hash运算 |
@@ -273,7 +273,7 @@ Tap tap = new Tap.Builder()
 * 描述 ：黑名单，在黑名单的请求，直接拒绝
 * 适用场景：封禁。
 * strategyClassName:"com.github.wwjwell.tap.strategy.local.BlackListStrategy" 
-* 配置描述：
+* 配置描述
 | 字段                | 含义           | 是否必须 | 默认值 | 描述                   |
 | ------------------- | -------------- | -------- | ------ | ---------------------- |
 | key | attachment的key      | 是      | 无    | key.value.做hash运算 |
