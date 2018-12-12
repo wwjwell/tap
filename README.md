@@ -10,7 +10,9 @@
 | 系统概念   |      名称      |  具体描述 |
 | :--------: |:-------------- |:------ |
 | channel | 限流通道| 一个业务系统分为多个channel，一个channel可以多个strategy.<br/>业务系统对某个具体的资源进行限流，会根据当前资源找到对应的chennel，然后执行channel下的限流策略strategy，如果有一个strategy限制了请求，则整个channel限制请求 |
-| resource | 资源 | channel下面的一个属性，用于channel的区分。两种类型<br/> 1、url-pattern类型：必须以/开头，主要应用于url匹配，如对http请求，比如/ * * 表示所有的URL， 可以支持：？匹配一个字、*匹配0个或多个字符、* *匹配0个或多个目录，于springMVC的url匹配模式一致，主要用于url限流方式 <br/>2、key类型:不以/开头，只匹配一个，主要应用于具体的某个resource，常用于注解方式 |
+| resource | 资源 | `channel下面的一个属性，用于channel的区分。两种类型
+1、url-pattern类型：必须以/开头，主要应用于url匹配，如对http请求，比如/** 表示所有的URL， 可以支持：？匹配一个字、*匹配0个或多个字符、* *匹配0个或多个目录，于springMVC的url匹配模式一致，主要用于url限流方式 
+2、key类型:不以/开头，只匹配一个，主要应用于具体的某个resource，常用于注解方式` |
 |strategy|限流策略|具体的限流方式，如限额、限频、黑白名单等等。。。|
 ##系统设计
 ![系统设计](docs/tap-xmind.png)
