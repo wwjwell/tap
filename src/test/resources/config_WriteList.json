@@ -1,0 +1,22 @@
+{
+  "name": "test.tap",
+  "enable":true,
+  "gatedIps":"172.18.183.29",
+  "channels":[
+    {
+      "resource":"/**",
+      "enable":true,
+      "strategies":[
+        {
+          "enable":true,
+          "strategyClassName":"com.github.wwjwell.tap.strategy.local.WriteListStrategy",
+          "config":{
+            "key":"uid",
+            "writeList": "1,2,10",
+            "ignoreAfterStrategy":true
+          }
+        }
+      ]
+    }
+  ]
+}

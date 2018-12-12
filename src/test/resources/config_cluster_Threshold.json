@@ -1,0 +1,18 @@
+{
+  "name": "test.tap",
+  "enable":true,
+  "channels":[
+    {
+      "resource":"/**",
+      "enable":true,
+      "strategies":[
+        {
+          "strategyClassName":"com.github.wwjwell.tap.strategy.cluster.ClusterThresholdStrategy",
+          "config":{
+            "qps":10
+          }
+        }
+      ]
+    }
+  ]
+}

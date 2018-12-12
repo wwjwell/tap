@@ -1,0 +1,20 @@
+{
+  "name": "test.tap",
+  "enable":true,
+  "gatedIps":"172.18.183.29",
+  "channels":[
+    {
+      "resource":"/**",
+      "enable":true,
+      "strategies":[
+        {
+          "strategyClassName":"com.github.wwjwell.tap.strategy.local.BlankListStrategy",
+          "config":{
+            "key":"uid",
+            "blankList": "1,2,20,10"
+          }
+        }
+      ]
+    }
+  ]
+}

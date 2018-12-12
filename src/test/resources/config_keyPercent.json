@@ -1,0 +1,19 @@
+{
+  "name": "test.test",
+  "enable":true,
+  "channels":[
+    {
+      "resource":"/**",
+      "enable":true,
+      "strategies":[
+        {
+          "strategyClassName":"com.github.wwjwell.tap.strategy.local.KeyPercentStrategy",
+          "config":{
+            "key": "uid",
+            "percent":1.55
+          }
+        }
+      ]
+    }
+  ]
+}

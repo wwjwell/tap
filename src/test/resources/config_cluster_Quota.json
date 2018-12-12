@@ -1,0 +1,20 @@
+{
+  "name": "test.tap",
+  "enable":true,
+  "channels":[
+    {
+      "resource":"/**",
+      "enable":true,
+      "strategies":[
+        {
+          "strategyClassName":"com.github.wwjwell.tap.strategy.cluster.ClusterQuotaStrategy",
+          "config":{
+            "key": "uid",
+            "period": 20,
+            "quota":10
+          }
+        }
+      ]
+    }
+  ]
+}
