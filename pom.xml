@@ -16,7 +16,7 @@
         <spring.version>4.3.18.RELEASE</spring.version>
         <aspectjrt.version>1.8.13</aspectjrt.version>
         <cglib.version>3.2.5</cglib.version>
-        <junit.version>4.12</junit.version>
+        <junit.version>4.13.1</junit.version>
         <jdk.compiler.level>1.7</jdk.compiler.level>
         <jdk.compiler.encoding>UTF-8</jdk.compiler.encoding>
     </properties>
